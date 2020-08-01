@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- ADD PRODUCT START -->
+<div class="container">
+    <div class="text-center mt-5">
+        <h1>Add New Product</h1>
+    </div>
+    <div class="row add-new-product">
+        <div class="col-lg-7 mx-auto">
+            <div class="card mt-2 mx-auto p-4 bg-light">
+                <div class="card-body bg-light">
+                    <div class="container">
+                        <form id="add-new-product-form" role="form" method="post" enctype=multipart/form-data>
+                            {{ form.hidden_tag() }}
+                            <div class="form-group row">
+                                {{ form.productname.label(class_="col-sm-3 col-form-label") }}
+                                <div class="col-sm-9">
+                                    {{ form.productname(class_="form-control") }}
+                                </div>
+                                {% for error in form.productname.errors %}
+                                    <span class="error_message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group row">
+                                {{ form.price.label(class_="col-sm-3 col-form-label") }}
+                                <div class="col-sm-9">
+                                    {{ form.price(class_="form-control") }}
+                                </div>
+                                {% for error in form.price.errors %}
+                                    <span class="error_message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group row">
+                                {{ form.detail_information.label(class_="col-sm-3 col-form-label") }}
+                                <div class="col-sm-9">
+                                    {{ form.detail_information(class_="form-control", rows="5") }}
+                                </div>
+                                {% for error in form.detail_information.errors %}
+                                    <span class="error_message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group row">
+                                {{ form.category.label(class_="col-sm-3 col-form-label") }}
+                                <div class="col-sm-9">
+                                    {{ form.category(class_="form-control") }}
+                                </div>
+                                {% for error in form.category.errors %}
+                                    <span class="error_message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group row">
+                                {{ form.photo.label(class_="col-sm-3 col-form-label") }}
+                                <div class="col-sm-9">
+                                    {{ form.photo(multiple="", id="file-upload") }}
+                                </div>
+                                {% for error in form.photo.errors %}
+                                    <span class="error_message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group row">
+                                {{ form.profile_photo.label(class_="col-sm-3 col-form-label") }}
+                                <div class="col-sm-9">
+                                    {{ form.profile_photo(id="file-upload") }}
+                                </div>
+                                {% for error in form.profile_photo.errors %}
+                                    <span class="error_message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="text-right">
+                                {{ form.submit(class_="custom-btn btn btn-primary mb-2") }}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div> <!-- /.8 -->
+        </div> <!-- /.row-->
+    </div>
+</div>
+<!-- ADD PRODUCT END -->
+{% endblock %}

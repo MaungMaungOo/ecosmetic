@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container product-list">
+    {% for product in products %}
+    <div class="row col-sm products">
+        <div class="col-sm-12 col-lg-3">
+            <img src="static/images/uploads/{{ product.profile_photo }}">
+        </div>
+        <div class="card col-sm-12 col-lg-6" id="product-info" onclick="viewProduct('{{ product.id }}')">
+            <div class="card-body">
+                <h4><u>{{ product.product_name }}</u></h4>
+                <blockquote class="blockquote mb-0">
+                <p>{{ product.detail_information }}</p>
+                <footer class="blockquote-footer">{{ product.price }} Kyat</footer>
+                </blockquote>
+            </div>
+        </div>
+        <div class="col-sm-12 col-lg-3">
+            <form class="add-to-cart-form" action="/add_to_cart" role="form" method="post">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.quantity(class_="form-control", placeholder="Qunatity", id="q"~product.id) }}
+                </div>
+                <span class="error_message" id="error{{ product.id }}"></span>
+                {{ form.loveit(hidden="", id="check"~product.id) }}
+                <div id="heart" onclick="heart('{{ product.id }}')">
+                    <i id="{{ product.id }}" class="fa fa-heart-o" aria-hidden="true"></i><br>
+                    <b>Love it !</b>
+                </div>
+                <div class="add-to-cart-btn-1">
+                    <button type="button" onclick='add_to_cart("{{ product.id }}")' class="custom-btn btn btn-primary mb-2">Add to Shopping Cart</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="text-center mt-5">
+        <h1>Admin Login</h1>
+    </div>
+    <div class="row login-form">
+        <div class="col-lg-7 mx-auto">
+            <div class="card mt-2 mx-auto p-4 bg-light">
+                <div class="card-body bg-light">
+                    <div class="container">
+                        <form id="login-form" role="form" method="post" novalidate>
+                            {{ form.hidden_tag() }}
+                            <div class="form-group row">
+                                {{ form.username.label(class_="col-sm-3 col-form-label") }}
+                                <div class="col-sm-9">
+                                    {{ form.username(class_="form-control") }}
+                                </div>
+                                {% for error in form.username.errors %}
+                                    <span class="error_message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group row">
+                                {{ form.password.label(class_="col-sm-3 col-form-label") }}
+                                <div class="col-sm-9">
+                                    {{ form.password(class_="form-control") }}
+                                </div>
+                                {% for error in form.password.errors %}
+                                    <span class="error_message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="text-right">
+                                {{ form.submit(class_="custom-btn btn btn-primary mb-2") }}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

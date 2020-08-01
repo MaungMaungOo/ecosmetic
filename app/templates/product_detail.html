@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- ORDER LIST START -->
+<div class="container order-list">
+    <div class="row col-sm">
+        <div class="col">
+            <div class="row tab-image-row">
+                {% for img in image_list %}
+                <div class="tab-image-column">
+                    <img src="/static/images/uploads/{{ product.photo }}/{{ img }}" alt="Product Image" onclick="tabImage(this);">
+                </div>
+                {% endfor %}
+                <div class="container tab-image-container">
+                    <span onclick="this.parentElement.style.display='none'" class="closebtn">&times;</span>
+                    <img id="expandedImg" style="width:100%">
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <h3>{{ product.product_name }}</h3>
+            <h6>Price - {{ product.price }} Kyat</h6>
+            <h6>{{ product.detail_information }}</h6>
+            <form class="add-to-cart-form">
+                {{ form.hidden_tag() }}
+                <div class="form-group row">
+                    {{ form.quantity.label(class_="col-sm-3 col-form-label") }}
+                    <div class="col-sm-9">
+                        {{ form.quantity(class_="form-control", id="q"~product.id) }}
+                    </div>
+                </div>
+                <span class="error_message" id="error{{ product.id }}"></span>
+                {{ form.loveit(hidden="", id="check"~product.id) }}
+                <div id="heart" onclick="heart('{{ product.id }}')">
+                    <i id="{{ product.id }}" class="fa fa-heart-o" aria-hidden="true"></i><br>
+                    <b>Love it !</b>
+                </div>
+                <div class="add-to-cart-btn-2">
+                    <button type="button" onclick='add_to_cart("{{ product.id }}")' class="custom-btn btn btn-primary mb-2">Add to Shopping Cart</button>
+                    <button type="button" onclick="goBack()" class="custom-btn btn btn-primary mb-2">Back</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- ORDER LIST END -->
+{% endblock %}

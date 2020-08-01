@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- ORDER LIST START -->
+<div class="container order-list">
+    <div class="row col-sm">
+        <div class="col">
+            <table class="table table-responsive">
+                <thead>
+                    <tr>
+                        <th scope="col">Image</th>
+                        <th scope="col">Items</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in display_cart.items() %}
+                    <tr id="tr{{ key }}">
+                        <td><img src="static/images/uploads/{{ value['image'] }}"></td>
+                        <th scope="row">{{ value["name"] }}</th>
+                        <td>{{ value["quantity"] * value["price"] }} Kyat</td>
+                        {% set quantity = value["quantity"] %}
+                        <td class="table-text-center">{{ quantity }}</td>
+                        <td class="table-text-center remove-from-cart" onclick='remove_cart_item("{{ key }}","{{ quantity }}")'>&times;</td>
+                    </tr>
+                    {% endfor %}
+                    <td></td>
+                    <th scope="row">Total</th>
+                    <td>{{ total }} Kyat</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-4">
+            <form>
+                <div class="form-group row">
+                    <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                    <div class="col-sm-10">
+                    <input type="text" class="form-control" id="name">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+                    <div class="col-sm-10">
+                    <input type="email" class="form-control" id="name">
+                    <small id="emailHelp" class="form-text text-muted">Optional</small>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputPhone" class="col-sm-2 col-form-label">Ph.no</label>
+                    <div class="col-sm-10">
+                    <input type="text" class="form-control" id="phone-number">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputAddress" class="col-sm-2 col-form-label">Address</label>
+                    <div class="col-sm-10">
+                    <textarea class="form-control" id="address" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputReq" class="col-sm-2 col-form-label">Special Request</label>
+                    <div class="col-sm-10">
+                    <textarea class="form-control" id="req" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="text-right col-lg-12">
+                    <button type="submit" class="custom-btn btn btn-primary mb-2">Submit Order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- ORDER LIST END -->
+{% endblock %}
