@@ -74,9 +74,9 @@ def add_product():
             if photo and allowed_file(photo.filename):
                 filename = secure_filename(str(count)+'.'+photo.filename.rsplit('.', 1)[1].lower())
                 count += 1;
-                photo.save(os.path.join(app.config['UPLOAD_FOLDER']+'\\'+image_folder, filename))
+                photo.save(os.path.join(app.config['UPLOAD_FOLDER'], image_folder, filename))
         profile_photo_filename = secure_filename('1.'+profile_photo.filename.rsplit('.', 1)[1].lower())
-        profile_photo.save(os.path.join(app.config['UPLOAD_FOLDER']+'\\'+image_folder, profile_photo_filename))
+        profile_photo.save(os.path.join(app.config['UPLOAD_FOLDER'], image_folder, profile_photo_filename))
         profile_location = image_folder+'/'+profile_photo_filename
         product = Products(product_name=form.productname.data, price=form.price.data,
                             detail_information=form.detail_information.data, category=form.category.data,
@@ -98,7 +98,9 @@ def view_products():
 def product_detail(id):
     form = AddToCartForm()
     product = Products.query.filter_by(id=id).first_or_404()
-    img_url = os.path.abspath(os.path.join(app.config["UPLOAD_FOLDER"],product.photo))
+    img_url = os.path.join(app.config["UPLOAD_FOLDER"],product.photo)
+    print(app.config["UPLOAD_FOLDER"])
+    print(img_url)
     image_list = [f for f in os.listdir(img_url) if os.path.isfile(os.path.join(img_url, f))]
     return render_template('product_detail.html', form=form, product=product, image_list=image_list, title='Product Detail')
 
