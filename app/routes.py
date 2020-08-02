@@ -3,7 +3,7 @@ from flask import render_template, flash, request, redirect, url_for, session
 from app import app, db
 from app.forms import LoginForm, AddProductsForm, AddToCartForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User, Products
+from app.models import Users, Products
 from werkzeug.utils import secure_filename
 from werkzeug.urls import url_parse
 from time import gmtime, strftime
@@ -31,7 +31,7 @@ def login():
         return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first_or_404()
+        user = Users.query.filter_by(username=form.username.data).first_or_404()
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('login'))
@@ -98,10 +98,8 @@ def view_products():
 def product_detail(id):
     form = AddToCartForm()
     product = Products.query.filter_by(id=id).first_or_404()
-    img_url = os.path.join(os.path.abspath("app/static/images/uploads/"),product.photo)
-    print(app.config["UPLOAD_FOLDER"])
-    print(img_url)
-    image_list = [f for f in os.listdir(os.path.abspath(img_url)) if os.path.isfile(os.path.abspath(os.path.join(img_url, f)))]
+    img_url = os.path.join(os.path.abspath(app.config["UPLOAD_FOLDER"]),product.photo)
+    image_list = [f for f in os.listdir(img_url) if os.path.isfile(os.path.join(img_url, f))]
     return render_template('product_detail.html', form=form, product=product, image_list=image_list, title='Product Detail')
 
 @app.route('/add_to_cart', methods=['GET', 'POST'])
