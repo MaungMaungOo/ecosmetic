@@ -98,7 +98,7 @@ def view_products():
 def product_detail(id):
     form = AddToCartForm()
     product = Products.query.filter_by(id=id).first_or_404()
-    img_url = os.path.join(app.config["UPLOAD_FOLDER"],product.photo)
+    img_url = os.path.join(os.path.abspath("app/static/images/uploads/"),product.photo)
     print(app.config["UPLOAD_FOLDER"])
     print(img_url)
     image_list = [f for f in os.listdir(os.path.abspath(img_url)) if os.path.isfile(os.path.abspath(os.path.join(img_url, f)))]
