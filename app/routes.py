@@ -101,7 +101,7 @@ def product_detail(id):
     img_url = os.path.join(app.config["UPLOAD_FOLDER"],product.photo)
     print(app.config["UPLOAD_FOLDER"])
     print(img_url)
-    image_list = [f for f in os.listdir(img_url) if os.path.isfile(os.path.join(img_url, f))]
+    image_list = [f for f in os.listdir(os.path.abspath(img_url)) if os.path.isfile(os.path.abspath(os.path.join(img_url, f)))]
     return render_template('product_detail.html', form=form, product=product, image_list=image_list, title='Product Detail')
 
 @app.route('/add_to_cart', methods=['GET', 'POST'])
