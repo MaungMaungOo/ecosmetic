@@ -7,11 +7,12 @@
         <div class="col-sm-12 col-lg-3">
             <img src="static/images/uploads/{{ product.profile_photo }}">
         </div>
-        <div class="card col-sm-12 col-lg-6" id="product-info" onclick="viewProduct('{{ product.id }}')">
+        <div class="card col-sm-12 col-lg-6" id="product-info">
             <div class="card-body">
                 <h4><u>{{ product.product_name }}</u></h4>
                 <blockquote class="blockquote mb-0">
                 <p>{{ product.detail_information }}</p>
+                <p class="text-right view-more" onclick="viewProduct('{{ product.id }}')">More</p>
                 <footer class="blockquote-footer">{{ product.price }} Kyat</footer>
                 </blockquote>
             </div>

@@ -75,6 +75,7 @@
                 <div class="card-footer">
                     <form class="add-to-cart-form" action="/add_to_cart" role="form" method="post">
                         {{ form.hidden_tag() }}
+                        <p class="text-right view-more" onclick="viewProduct('{{ product.id }}')">More</p>
                         {{ form.loveit(hidden="", id="check"~product.id) }}
                         <div id="heart" onclick="heart('{{ product.id }}')">
                             <i id="{{ product.id }}" class="fa fa-heart-o" aria-hidden="true"></i><br>
@@ -104,22 +105,24 @@
         <div class="col-sm">
             <img class="svg-img" src="{{ url_for('static', filename='images/svgIcons/truck-solid.svg') }}" alt="">
             <h5>Shipping</h5>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minus quaerat corporis nulla eius ipsa veritatis, illum dolor modi commodi mollitia sint dignissimos consectetur repudiandae voluptate quas, unde itaque ipsum architecto.</p>
+            <p>Safe and Fast delivery services
+                Order today and get tomorrow (Instock Items)(Yangon) 
+                Can deliver the every township around Myanmar</p>
         </div>
         <div class="col-sm">
             <img class="svg-img" src="{{ url_for('static', filename='images/svgIcons/file-invoice-dollar-solid.svg') }}" alt="">
             <h5>Price</h5>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minus quaerat corporis nulla eius ipsa veritatis, illum dolor modi commodi mollitia sint dignissimos consectetur repudiandae voluptate quas, unde itaque ipsum architecto.</p>
+            <p>Appropriate Price and best quality product and service</p>
         </div>
         <div class="col-sm">
             <img class="svg-img" src="{{ url_for('static', filename='images/svgIcons/credit-card-regular.svg') }}" alt="">
             <h5>Payment</h5>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minus quaerat corporis nulla eius ipsa veritatis, illum dolor modi commodi mollitia sint dignissimos consectetur repudiandae voluptate quas, unde itaque ipsum architecto.</p>
+            <p>Cash On Delivery & Bank Account Transfer & Mobbile Banking are Avalibable</p>
         </div>
         <div class="col-sm">
             <img class="svg-img" src="{{ url_for('static', filename='images/svgIcons/clock-solid.svg') }}" alt="">
             <h5>Service</h5>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minus quaerat corporis nulla eius ipsa veritatis, illum dolor modi commodi mollitia sint dignissimos consectetur repudiandae voluptate quas, unde itaque ipsum architecto.</p>
+            <p>Can discuss your skin problem and guide the best product for you</p>
         </div>
     </div>
 </div>
