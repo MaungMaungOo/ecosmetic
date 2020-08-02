@@ -1,5 +1,5 @@
-import os, json
-from flask import render_template, flash, request, redirect, url_for, session
+import os, json, shutil
+from flask import render_template, flash, request, redirect, url_for, session, abort
 from app import app, db
 from app.forms import LoginForm, AddProductsForm, AddToCartForm
 from flask_login import current_user, login_user, logout_user, login_required
@@ -86,7 +86,30 @@ def add_product():
         return redirect(url_for('add_product'))
     return render_template('add_product.html', title='Add Product', form=form)
 
-# @app.route('/delete_product')
+@app.route('/delete_from_db', methods=['DELETE'])
+def delete_from_db():
+    if request.method == 'DELETE':
+        id = request.form.get("id")
+    else:
+        abort(405)
+    product = Products.query.filter_by(id=id).first_or_404()
+    if product:
+        try:
+            dir_path = os.path.join(app.config['UPLOAD_FOLDER'], product.photo)
+            shutil.rmtree(dir_path)
+        except OSError as e:
+            print(os.path.join(app.config['UPLOAD_FOLDER'], product.photo))
+            abort(Response("Error deleting files!"))
+        db.session.delete(product)
+        db.session.commit()
+        return json.dumps({"success":""})
+    else:
+        abort(Response("There is no such product!"))
+
+@app.route('/delete_product', methods=['GET', 'DELETE'])
+def delete_product():
+    products = Products.query.all()
+    return render_template('delete_product.html', products=products, title='Delete Products')
 
 @app.route('/view_products')
 def view_products():
@@ -141,6 +164,7 @@ def remove_cart_item():
     if request.method == 'DELETE':
         id = request.form.get("id")
         quantity = request.form.get("quantity")
+        price = request.form.get("price")
     else:
         return json.dumps()
     
@@ -148,8 +172,9 @@ def remove_cart_item():
     for item in session['cart']:
         if item['id']==id:
             session['cart'].remove(item)
+    total = int(quantity) * int(price)
     session["total"] = int(session["total"]) - int(quantity)
-    return json.dumps({"total":session["total"]})
+    return json.dumps({"total":session["total"],"tprice":total})
 
 @app.route('/cart')
 def cart():
@@ -161,7 +186,8 @@ def cart():
 
     for item in items:
         product = Products.query.filter_by(id=item['id']).first_or_404()
-        total_price += product.price
+        price = product.price * int(item['quantity'])
+        total_price += price
         if product.id in dict_of_products.keys():
             dict_of_products[product.id]["quantity"] += int(item['quantity'])
         else:

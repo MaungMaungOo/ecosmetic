@@ -22,13 +22,14 @@
                         <th scope="row">{{ value["name"] }}</th>
                         <td>{{ value["quantity"] * value["price"] }} Kyat</td>
                         {% set quantity = value["quantity"] %}
+                        {% set price = value["price"] %}
                         <td class="table-text-center">{{ quantity }}</td>
-                        <td class="table-text-center remove-from-cart" onclick='remove_cart_item("{{ key }}","{{ quantity }}")'>&times;</td>
+                        <td class="table-text-center remove-from-cart" onclick='remove_cart_item("{{ key }}","{{ quantity }}","{{ price }}")'>&times;</td>
                     </tr>
                     {% endfor %}
                     <td></td>
                     <th scope="row">Total</th>
-                    <td>{{ total }} Kyat</td>
+                    <td><span id="totalprice">{{ total }}</span> Kyat</td>
                     </tr>
                 </tbody>
             </table>

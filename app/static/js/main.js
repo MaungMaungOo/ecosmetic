@@ -34,13 +34,16 @@ function add_to_cart(id) {
     }
 }
 
-function remove_cart_item(id, quantity) {
+function remove_cart_item(id, quantity, price) {
     $.ajax({
         type: "DELETE",
         url: "/remove_cart_item",
-        data: {id: id, quantity: quantity},
+        data: {id: id, quantity: quantity, price: price},
         dataType: "json",
         success: function(data){
+            total = $('#totalprice').text();
+            total = parseInt(total) - parseInt(data.tprice);
+            $('#totalprice').text(total);
             $("#cart-total").text(data.total);
             $("#tr"+id).fadeOut();
         }
@@ -64,6 +67,21 @@ function viewProduct(id) {
 function heart(id) {
     document.getElementById("check"+id).checked = true;
     document.getElementById(id).className = "fa fa-heart fa-2x";
+}
+
+function delete_product(id) {
+    $.ajax({
+        type: "DELETE",
+        url: "/delete_from_db",
+        data: {id: id},
+        dataType: "json",
+        success: function(){
+            $("#tr"+id).fadeOut();
+        },
+        error: function(){
+            alert("Error!");
+        }
+    })
 }
 
 function search_by_category(category) {

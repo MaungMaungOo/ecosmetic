@@ -159,6 +159,10 @@ body::-webkit-scrollbar-thumb {
     cursor: pointer;
 }
 
+.delete-product:hover {
+    color: #db7093;
+}
+
 .footer {
     border-top: 3px solid #f94279;
     position: relative;
@@ -343,8 +347,11 @@ table td img {
     border-color: #f94279 !important;
 }
 
-#product-info {
-    cursor: pointer;
+.product-detail {
+    width: 13rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #heart {

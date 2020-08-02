@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row col-sm">
+        <div class="col">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Image</th>
+                        <th scope="col">Items</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr id="tr{{ product.id }}">
+                        <td><img src="static/images/uploads/{{ product.profile_photo }}"></td>
+                        <th scope="row">{{ product.product_name }}</th>
+                        <td>{{ product.price }} Kyat</td>
+                        <td><i class="fa fa-trash fa-2x delete-product remove-from-cart" onclick='delete_product("{{ product.id }}")'></i></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
