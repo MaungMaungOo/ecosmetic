@@ -62,8 +62,8 @@ def add_product():
             return redirect(url_for('add_product'))
         photos = request.files.getlist('photo')
         profile_photo = request.files['profile_photo']
-        if not os.path.exists(app.config['UPLOAD_FOLDER']+'\\'+image_folder):
-            os.makedirs(app.config['UPLOAD_FOLDER']+'\\'+image_folder)
+        if not os.path.exists(os.path.join(os.path.abspath(app.config['UPLOAD_FOLDER']), image_folder)):
+            os.makedirs(os.path.join(os.path.abspath(app.config['UPLOAD_FOLDER']), image_folder))
         else:
             return redirect(url_for('add_product'))
         count = 2;
@@ -74,9 +74,9 @@ def add_product():
             if photo and allowed_file(photo.filename):
                 filename = secure_filename(str(count)+'.'+photo.filename.rsplit('.', 1)[1].lower())
                 count += 1;
-                photo.save(os.path.join(app.config['UPLOAD_FOLDER'], image_folder, filename))
+                photo.save(os.path.join(os.path.abspath(    ), image_folder, filename))
         profile_photo_filename = secure_filename('1.'+profile_photo.filename.rsplit('.', 1)[1].lower())
-        profile_photo.save(os.path.join(app.config['UPLOAD_FOLDER'], image_folder, profile_photo_filename))
+        profile_photo.save(os.path.join(os.path.abspath(app.config['UPLOAD_FOLDER']), image_folder, profile_photo_filename))
         profile_location = image_folder+'/'+profile_photo_filename
         product = Products(product_name=form.productname.data, price=form.price.data,
                             detail_information=form.detail_information.data, category=form.category.data,
@@ -99,7 +99,7 @@ def product_detail(id):
     form = AddToCartForm()
     product = Products.query.filter_by(id=id).first_or_404()
     img_url = os.path.join(os.path.abspath(app.config["UPLOAD_FOLDER"]),product.photo)
-    image_list = [f for f in os.listdir(img_url) if os.path.isfile(os.path.join(img_url, f))]
+    image_list = [f for f in os.listdir(os.path.abspath(img_url)) if os.path.isfile(os.path.join(os.path.abspath(img_url), f))]
     return render_template('product_detail.html', form=form, product=product, image_list=image_list, title='Product Detail')
 
 @app.route('/add_to_cart', methods=['GET', 'POST'])
