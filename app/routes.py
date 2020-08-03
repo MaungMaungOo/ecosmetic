@@ -111,11 +111,14 @@ def delete_product():
     products = Products.query.all()
     return render_template('delete_product.html', products=products, title='Delete Products')
 
-@app.route('/view_products')
-def view_products():
+@app.route('/view_products/<string:category>')
+def view_products(category):
     form = AddToCartForm()
-    products = Products.query.all()
-    return render_template('view_products.html', form=form, products=products, title='View Products')
+    no_product = False
+    products = Products.query.filter_by(category=category).all()
+    if not products:
+        no_product = True
+    return render_template('view_products.html', form=form, no_product=no_product, products=products, title='View Products')
 
 @app.route('/product_detail/<int:id>')
 def product_detail(id):

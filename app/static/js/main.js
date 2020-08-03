@@ -27,7 +27,7 @@ function add_to_cart(id) {
                 $('#check'+id).prop("checked", false);
                 document.getElementById(id).className = "fa fa-heart-o";
             }
-        })
+        });
     }
     else {
         $("#error"+id).text("Please enter desire quantity in digit.");
@@ -47,7 +47,7 @@ function remove_cart_item(id, quantity, price) {
             $("#cart-total").text(data.total);
             $("#tr"+id).fadeOut();
         }
-    })
+    });
 }
 
 function goBack() {
@@ -81,9 +81,5 @@ function delete_product(id) {
         error: function(){
             alert("Error!");
         }
-    })
-}
-
-function search_by_category(category) {
-
+    });
 }

@@ -2,10 +2,13 @@
 
 {% block content %}
 <div class="container product-list">
+    {% if no_product: %}
+        {% include '_no_product.html' %}
+    {% endif %}
     {% for product in products %}
     <div class="row col-sm products">
         <div class="col-sm-12 col-lg-3">
-            <img src="static/images/uploads/{{ product.profile_photo }}">
+            <img src="/static/images/uploads/{{ product.profile_photo }}">
         </div>
         <div class="card col-sm-12 col-lg-6">
             <div class="card-body">

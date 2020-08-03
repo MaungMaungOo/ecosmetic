@@ -59,9 +59,11 @@ body::-webkit-scrollbar-thumb {
 .dropdown:hover .dropdown-menu, .btn-group:hover .dropdown-menu{
     display: block;
 }
+
 .dropdown-menu{
     margin-top: 0;
 }
+
 .dropdown-toggle{
     margin-bottom: 2px;
 }
@@ -319,6 +321,11 @@ table td img {
 .error_page #fourofour, .error_page #fiveoo {
     font-weight: 1000;
     font-size: 10rem;
+}
+
+.error_page #noproduct {
+    font-weight: 1000;
+    font-size: 5rem;
 }
 
 .error_page #oops {
