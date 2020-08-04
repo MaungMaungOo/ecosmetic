@@ -1,13 +1,22 @@
 import os, json, shutil
-from flask import render_template, flash, request, redirect, url_for, session, abort
+from flask import render_template, flash, request, redirect, url_for, session, abort, send_file
 from app import app, db
-from app.forms import LoginForm, AddProductsForm, AddToCartForm
+from app.forms import LoginForm, AddProductsForm, AddToCartForm, OrderForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import Users, Products
 from werkzeug.utils import secure_filename
 from werkzeug.urls import url_parse
 from time import gmtime, strftime
 from flask_paginate import Pagination, get_page_args
+#libraries to create the pdf file and add text to it
+from reportlab.pdfgen import canvas
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.pdfmetrics import stringWidth
+from reportlab.pdfbase.ttfonts import TTFont
+#library to get logo related information
+from PIL import Image
+#get today date
+from datetime import date, datetime
 
 @app.route('/')
 @app.route('/index')
@@ -87,6 +96,7 @@ def add_product():
     return render_template('add_product.html', title='Add Product', form=form)
 
 @app.route('/delete_from_db', methods=['DELETE'])
+@login_required
 def delete_from_db():
     if request.method == 'DELETE':
         id = request.form.get("id")
@@ -106,7 +116,8 @@ def delete_from_db():
     else:
         abort(Response("There is no such product!"))
 
-@app.route('/delete_product', methods=['GET', 'DELETE'])
+@app.route('/delete_product')
+@login_required
 def delete_product():
     products = Products.query.all()
     return render_template('delete_product.html', products=products, title='Delete Products')
@@ -175,6 +186,9 @@ def remove_cart_item():
     for item in session['cart']:
         if item['id']==id:
             session['cart'].remove(item)
+
+    del session["order"][id]
+    
     total = int(quantity) * int(price)
     session["total"] = int(session["total"]) - int(quantity)
     return json.dumps({"total":session["total"],"tprice":total})
@@ -198,5 +212,145 @@ def cart():
                                             "name": product.product_name, 
                                             "price":int(product.price),
                                             "image":product.profile_photo}
+    form = OrderForm()
+    if "order" not in session:
+        session["order"] = []
+    session.modified = True
+    session["order"] = dict_of_products
 
-    return render_template("cart.html", display_cart = dict_of_products, total = total_price)
+    return render_template("cart.html", display_cart=dict_of_products, form=form, total=total_price, title='Shopping Cart')
+
+#convert the font so it is compatible
+pdfmetrics.registerFont(TTFont('Arial','Arial.ttf'))
+
+#import company's logo
+im = Image.open('app/static/images/staticImages/logo.png')
+width, height = im.size
+ratio = width/height
+image_width = 400
+image_height = int(image_width / ratio)
+
+#Page information
+page_width = 2156
+page_height = 3050
+
+#Invoice variables
+company_name ='ECOSMETIC'
+company_email = 'support@company.com'
+phoneno = '09 695 701908'
+margin = 100
+
+#def function
+def generate_pdf(orders,customer,address,c_phoneno,special_req):
+    #Creating a pdf file and setting a naming convention
+    now = datetime.now()
+    pdf_name = now.strftime("%Y-%m-%d-%H-%M-%S")
+    today = date.today()
+    month_year = today.strftime("%B %d, %Y")
+    invoice_number = now.strftime("%Y%m%d%H%M%S")
+    c = canvas.Canvas("app/static/orders/"+pdf_name +'.pdf')
+    c.setPageSize((page_width, page_height))
+
+    #Drawing the image
+    c.drawImage("app/static/images/staticImages/logo.png", page_width - image_width - margin,
+                        page_height - image_height - margin, image_width, image_height, mask="auto")
+
+    #Invoice information
+    c.setFont('Arial',80)
+    text = 'INVOICE'
+    text_width = stringWidth(text,'Arial',80)
+    c.drawString((page_width-text_width)/2, page_height - image_height - margin, text)
+    y = page_height - image_height - margin*4
+    x = 2*margin
+    x2 = x + 500
+    x3 = x2 + 500
+    x4 = x3 + 500
+    
+    c.setFont('Arial', 45)
+    c.drawString(x,y, company_name)
+    c.drawString(x3,y,"Purchased Date: "+month_year)
+    y -= margin
+    
+    c.drawString(x,y,company_email)
+    c.drawString(x3,y,'Customer Name: '+customer)
+    y -= margin
+
+    c.drawString(x,y,phoneno)
+    c.drawString(x3,y,'Invoice number: '+str(invoice_number))
+    y -= margin
+
+    c.drawString(x,y,"Delivery Address:")
+    y -= margin
+
+    if len(address) > 90:
+        wrap_text = textwrap.wrap(special_req, width=90)
+        for text in wrap_text:
+            c.drawString(x, y, text)
+            y -= margin
+    else:
+        c.drawString(x, y, address)
+        y -= margin
+
+    c.drawString(x,y,"Customer Contact:")
+    y -= margin
+
+    c.drawString(x, y, c_phoneno)
+    y -= margin
+
+    c.drawString(x,y,"Special Request:")
+    y -= margin
+
+    if len(special_req) > 90:
+        wrap_text = textwrap.wrap(special_req, width=90)
+        for text in wrap_text:
+            c.drawString(x, y, text)
+            y -= margin
+    elif len(special_req) <= 0:
+        c.drawString(x, y, "None")
+        y -= margin
+    else:
+        c.drawString(x, y, special_req)
+        y -= margin
+    y -= margin
+
+    c.drawString(x,y,"Product")
+    c.drawString(x2,y,"Quantity")
+    c.drawString(x3,y,"Unite Price")
+    c.drawString(x4,y,"Total")
+    y -= margin
+
+    all_total = 0
+    for order in orders.values():
+        product = order['name']
+        price = order['price']
+        quantity = order['quantity']
+        total = quantity*price
+        all_total += total
+        quantity = str(quantity)
+        price = str(price)
+        total = str(total)
+
+        c.drawString(x,y,product)
+        c.drawString(x2,y,quantity)
+        c.drawString(x3,y,price+" Kyat")
+        c.drawString(x4,y,total+" Kyat")
+        y -= margin
+
+    c.drawString(x4,y,"Total: "+str(all_total)+" Kyat")
+
+    #Saving the pdf file
+    c.save()
+    return pdf_name+".pdf"
+
+@app.route('/voucher', methods=['POST'])
+def voucher():
+    if request.method == 'POST':
+        name = request.form.get("name")
+        phoneno = request.form.get("phoneno")
+        address = request.form.get("address")
+        special_req = request.form.get("special_req")
+    order = session['order']
+    pdf_name = generate_pdf(order,name,address,phoneno,special_req)
+    session.modified = True
+    session.clear()
+    return send_file('static/orders/'+pdf_name, as_attachment=True)

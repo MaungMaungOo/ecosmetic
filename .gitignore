@@ -2,6 +2,8 @@
 lib/*.pyc
 .cache
 __pycache__/
+app/__pycache__/
+app/static/orders/
 .coverage
 .vscode
 ecos/

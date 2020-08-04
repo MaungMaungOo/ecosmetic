@@ -27,3 +27,9 @@ class AddProductsForm(FlaskForm):
 class AddToCartForm(FlaskForm):
     quantity = IntegerField('Quantity', validators=[DataRequired(), NumberRange(min = 1)])
     loveit = BooleanField('Love It', validators=[DataRequired()])
+
+class OrderForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    phoneno = StringField('Phone', validators=[DataRequired()])
+    address = TextAreaField('Address', validators=[DataRequired()])
+    special_req = TextAreaField('Special Request', validators=[])
