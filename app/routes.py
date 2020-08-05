@@ -220,6 +220,8 @@ def cart():
 
     return render_template("cart.html", display_cart=dict_of_products, form=form, total=total_price, title='Shopping Cart')
 
+#convert the font so it is compatible
+pdfmetrics.registerFont(TTFont('Arial','Arial.ttf'))
 #import company's logo
 im = Image.open('app/static/images/staticImages/logo.png')
 width, height = im.size
@@ -338,6 +340,9 @@ def generate_pdf(orders,customer,address,c_phoneno,special_req):
     #Saving the pdf file
     c.save()
     return pdf_name+".pdf"
+
+def sent_mail(pdf_name):
+    pass
 
 @app.route('/voucher', methods=['POST'])
 def voucher():
